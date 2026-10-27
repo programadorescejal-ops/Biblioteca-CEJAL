@@ -1,0 +1,432 @@
+/* ============================================
+   THEMES.CSS - TEMAS E VARIÁVEIS GLOBAIS
+   Biblioteca CEJAL
+   ============================================ */
+
+/* ============================================
+   TEMA CLARO (PADRÃO)
+   ============================================ */
+:root {
+    /* Cores Principais - Azul Institucional */
+    --color-primary: #1565C0;
+    --color-primary-dark: #0D47A1;
+    --color-primary-light: #42A5F5;
+    --color-primary-lighter: #BBDEFB;
+    --color-primary-lightest: #E3F2FD;
+    
+    /* Cores Secundárias - Laranja Destaque */
+    --color-secondary: #FF6F00;
+    --color-secondary-light: #FFA726;
+    --color-secondary-lighter: #FFF3E0;
+    
+    /* Cores de Status */
+    --color-success: #2E7D32;
+    --color-success-light: #A5D6A7;
+    --color-success-bg: #E8F5E9;
+    
+    --color-danger: #C62828;
+    --color-danger-light: #EF9A9A;
+    --color-danger-bg: #FFEBEE;
+    
+    --color-warning: #F57F17;
+    --color-warning-light: #FFCC80;
+    --color-warning-bg: #FFF8E1;
+    
+    --color-info: #0288D1;
+    --color-info-light: #81D4FA;
+    --color-info-bg: #E1F5FE;
+    
+    /* Cores Neutras */
+    --color-white: #FFFFFF;
+    --color-black: #000000;
+    --color-gray-50: #FAFAFA;
+    --color-gray-100: #F5F5F5;
+    --color-gray-200: #EEEEEE;
+    --color-gray-300: #E0E0E0;
+    --color-gray-400: #BDBDBD;
+    --color-gray-500: #9E9E9E;
+    --color-gray-600: #757575;
+    --color-gray-700: #616161;
+    --color-gray-800: #424242;
+    --color-gray-900: #212121;
+    
+    /* Cores de Fundo e Superfície */
+    --bg-primary: #F5F5F5;
+    --bg-secondary: #FFFFFF;
+    --bg-card: #FFFFFF;
+    --bg-hover: #EEEEEE;
+    --bg-active: #E3F2FD;
+    
+    /* Cores de Texto */
+    --text-primary: #212121;
+    --text-secondary: #757575;
+    --text-light: #9E9E9E;
+    --text-white: #FFFFFF;
+    --text-link: #1565C0;
+    --text-link-hover: #0D47A1;
+    
+    /* Sombras */
+    --shadow-xs: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.12);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.16);
+    --shadow-xl: 0 12px 36px rgba(0,0,0,0.20);
+    --shadow-2xl: 0 24px 48px rgba(0,0,0,0.25);
+    
+    /* Bordas */
+    --radius-none: 0;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+    
+    /* Tipografia */
+    --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-family-mono: 'Courier New', monospace;
+    
+    --font-size-xs: 12px;
+    --font-size-sm: 14px;
+    --font-size-base: 16px;
+    --font-size-md: 18px;
+    --font-size-lg: 20px;
+    --font-size-xl: 24px;
+    --font-size-2xl: 28px;
+    --font-size-3xl: 32px;
+    --font-size-4xl: 40px;
+    
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+    
+    --line-height-tight: 1.25;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.75;
+    
+    /* Espaçamentos */
+    --spacing-0: 0;
+    --spacing-1: 4px;
+    --spacing-2: 8px;
+    --spacing-3: 12px;
+    --spacing-4: 16px;
+    --spacing-5: 20px;
+    --spacing-6: 24px;
+    --spacing-8: 32px;
+    --spacing-10: 40px;
+    --spacing-12: 48px;
+    --spacing-16: 64px;
+    --spacing-20: 80px;
+    --spacing-24: 96px;
+    
+    /* Transições */
+    --transition-none: none;
+    --transition-fast: 150ms ease;
+    --transition-normal: 300ms ease;
+    --transition-slow: 500ms ease;
+    --transition-very-slow: 800ms ease;
+    
+    /* Z-Index */
+    --z-base: 1;
+    --z-dropdown: 10;
+    --z-sticky: 100;
+    --z-fixed: 200;
+    --z-modal: 500;
+    --z-overlay: 600;
+    --z-toast: 700;
+    --z-max: 999;
+}
+
+/* ============================================
+   TEMA ESCURO (PREPARADO PARA FUTURO)
+   ============================================ */
+[data-theme="dark"] {
+    --bg-primary: #121212;
+    --bg-secondary: #1E1E1E;
+    --bg-card: #2D2D2D;
+    --bg-hover: #3D3D3D;
+    --bg-active: #1A237E;
+    
+    --text-primary: #E0E0E0;
+    --text-secondary: #B0B0B0;
+    --text-light: #808080;
+    --text-white: #FFFFFF;
+    --text-link: #64B5F6;
+    --text-link-hover: #90CAF9;
+    
+    --shadow-xs: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.4);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.6);
+    --shadow-xl: 0 12px 36px rgba(0,0,0,0.7);
+    --shadow-2xl: 0 24px 48px rgba(0,0,0,0.8);
+    
+    --color-white: #1E1E1E;
+    --color-gray-100: #2D2D2D;
+    --color-gray-200: #3D3D3D;
+    --color-gray-300: #4D4D4D;
+    --color-gray-400: #6D6D6D;
+    --color-gray-500: #8D8D8D;
+    --color-gray-600: #ADADAD;
+    --color-gray-700: #CDCDCD;
+    --color-gray-800: #E0E0E0;
+    --color-gray-900: #F5F5F5;
+}
+
+/* ============================================
+   CLASSES DE TEMA
+   ============================================ */
+/* Fundo */
+.bg-primary { background-color: var(--bg-primary); }
+.bg-secondary { background-color: var(--bg-secondary); }
+.bg-card { background-color: var(--bg-card); }
+.bg-white { background-color: var(--color-white); }
+
+/* Texto */
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-light { color: var(--text-light); }
+.text-white { color: var(--text-white); }
+
+/* Sombras */
+.shadow-none { box-shadow: none; }
+.shadow-sm { box-shadow: var(--shadow-sm); }
+.shadow-md { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+.shadow-xl { box-shadow: var(--shadow-xl); }
+
+/* Bordas */
+.rounded-none { border-radius: var(--radius-none); }
+.rounded-sm { border-radius: var(--radius-sm); }
+.rounded-md { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-xl { border-radius: var(--radius-xl); }
+.rounded-full { border-radius: var(--radius-full); }
+
+/* ============================================
+   ANIMAÇÕES GLOBAIS
+   ============================================ */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(10px); }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes slideOut {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
+}
+
+@keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes scaleOut {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.9); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* ============================================
+   ANIMAÇÕES APLICADAS
+   ============================================ */
+.animate-fade-in {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.animate-fade-out {
+    animation: fadeOut 0.5s ease forwards;
+}
+
+.animate-slide-in {
+    animation: slideIn 0.3s ease forwards;
+}
+
+.animate-scale-in {
+    animation: scaleIn 0.3s ease forwards;
+}
+
+.animate-pulse {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+.animate-bounce {
+    animation: bounce 1s ease-in-out infinite;
+}
+
+/* ============================================
+   LOADING SHIMMER (PARA CARDS)
+   ============================================ */
+.shimmer {
+    background: linear-gradient(
+        90deg,
+        var(--color-gray-200) 25%,
+        var(--color-gray-300) 50%,
+        var(--color-gray-200) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+/* ============================================
+   FOCUS VISIBLE (ACESSIBILIDADE)
+   ============================================ */
+:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* ============================================
+   SELEÇÃO DE TEXTO
+   ============================================ */
+::selection {
+    background: var(--color-primary-light);
+    color: var(--color-white);
+}
+
+::-moz-selection {
+    background: var(--color-primary-light);
+    color: var(--color-white);
+}
+
+/* ============================================
+   SCROLLBAR PERSONALIZADA
+   ============================================ */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-gray-200);
+    border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-primary-light);
+    border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary);
+}
+
+/* ============================================
+   FERRAMENTA DE TROCA DE TEMA
+   ============================================ */
+.theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--spacing-2);
+    border-radius: var(--radius-full);
+    transition: background var(--transition-fast);
+    color: var(--text-primary);
+    font-size: var(--font-size-lg);
+}
+
+.theme-toggle:hover {
+    background: var(--bg-hover);
+}
+
+/* ============================================
+   BADGES DE STATUS
+   ============================================ */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+}
+
+.badge-primary {
+    background: var(--color-primary-lightest);
+    color: var(--color-primary);
+}
+
+.badge-success {
+    background: var(--color-success-bg);
+    color: var(--color-success);
+}
+
+.badge-danger {
+    background: var(--color-danger-bg);
+    color: var(--color-danger);
+}
+
+.badge-warning {
+    background: var(--color-warning-bg);
+    color: var(--color-warning);
+}
+
+.badge-info {
+    background: var(--color-info-bg);
+    color: var(--color-info);
+}
+
+/* ============================================
+   RESPONSIVO PARA TEMA
+   ============================================ */
+@media (max-width: 480px) {
+    .badge {
+        font-size: 10px;
+        padding: 2px 8px;
+    }
+    
+    .theme-toggle {
+        font-size: var(--font-size-md);
+    }
+}
+
+/* ============================================
+   PRINT - TEMA
+   ============================================ */
+@media print {
+    .theme-toggle {
+        display: none !important;
+    }
+    
+    body {
+        background: white !important;
+        color: black !important;
+    }
+}

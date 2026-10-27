@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - Biblioteca CEJAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        .perfil-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: var(--spacing-xl) 0;
+            text-align: center;
+        }
+        .perfil-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: var(--radius-full);
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            margin: 0 auto var(--spacing-md);
+            border: 4px solid white;
+        }
+        .perfil-nome {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+        }
+        .perfil-info {
+            font-size: var(--font-size-sm);
+            opacity: 0.9;
+        }
+        .perfil-section {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+            box-shadow: var(--shadow-sm);
+        }
+        .perfil-section h3 {
+            font-size: var(--font-size-md);
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        .badge-item {
+            display: inline-block;
+            background: #FFF8E1;
+            color: #F57F17;
+            padding: var(--spacing-xs) var(--spacing-md);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            margin: var(--spacing-xs);
+        }
+        .badge-item i {
+            margin-right: var(--spacing-xs);
+        }
+        .livro-mini {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .livro-mini:last-child {
+            border-bottom: none;
+        }
+        .livro-mini img {
+            width: 40px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+        }
+        .livro-mini-info {
+            flex: 1;
+        }
+        .livro-mini-info h4 {
+            font-size: var(--font-size-sm);
+        }
+        .livro-mini-info p {
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+        }
+        .btn-sair {
+            width: 100%;
+            padding: var(--spacing-md);
+            background: var(--error);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-md);
+            font-weight: 600;
+            font-family: var(--font-primary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .btn-sair:hover {
+            background: #b71c1c;
+            transform: translateY(-2px);
+        }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-sm);
+            text-align: center;
+        }
+        .stat-grid .stat-item {
+            background: var(--background);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-sm);
+        }
+        .stat-grid .stat-number {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .stat-grid .stat-label {
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+        }
+        @media (max-width: 480px) {
+            .stat-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-book-open"></i>
+                    <span>Biblioteca CEJAL</span>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-profile" onclick="window.location.href='index.html'">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="perfil-header">
+        <div class="container">
+            <div class="perfil-avatar">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+            <div class="perfil-nome" id="perfilNome">Carregando...</div>
+            <div class="perfil-info">
+                <span id="perfilMatricula"></span> • 
+                <span id="perfilSerieTurma"></span>
+            </div>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <div class="container">
+            <!-- Estatísticas -->
+            <div class="perfil-section">
+                <h3><i class="fas fa-chart-simple"></i> Estatísticas</h3>
+                <div class="stat-grid" id="statsContainer">
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalLidos">0</div>
+                        <div class="stat-label">Livros Lidos</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="livrosAtuais">0</div>
+                        <div class="stat-label">Emprestados</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="diasLeitor">0</div>
+                        <div class="stat-label">Dias como Leitor</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Badges -->
+            <div class="perfil-section">
+                <h3><i class="fas fa-medal"></i> Conquistas</h3>
+                <div id="badgesContainer">
+                    <p style="color:var(--text-secondary);font-size:var(--font-size-sm);">Nenhuma conquista ainda. Continue lendo!</p>
+                </div>
+            </div>
+
+            <!-- Livros Atuais -->
+            <div class="perfil-section">
+                <h3><i class="fas fa-hand-holding-heart"></i> Livros Emprestados</h3>
+                <div id="livrosAtuaisContainer">
+                    <p style="color:var(--text-secondary);font-size:var(--font-size-sm);">Nenhum livro emprestado</p>
+                </div>
+            </div>
+
+            <!-- Histórico -->
+            <div class="perfil-section">
+                <h3><i class="fas fa-history"></i> Histórico de Leitura</h3>
+                <div id="historicoContainer">
+                    <p style="color:var(--text-secondary);font-size:var(--font-size-sm);">Nenhum livro lido ainda</p>
+                </div>
+            </div>
+
+            <!-- Botão Sair -->
+            <button class="btn-sair" onclick="sair()">
+                <i class="fas fa-sign-out-alt"></i> Sair da Conta
+            </button>
+        </div>
+    </main>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="js/config/firebase-config.js"></script>
+    <script src="js/auth/auth.js"></script>
+    <script src="js/auth/auth-guard.js"></script>
+    <script src="js/core/livros.js"></script>
+    <script src="js/utils/helpers.js"></script>
+    
+    <script>
+        let userData = null;
+        let allLivros = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const loggedIn = await authGuard.verifyAuth();
+            if (!loggedIn) { window.location.href = 'login.html'; return; }
+            
+            userData = await authSystem.loadUserData(auth.currentUser.uid);
+            carregarPerfil();
+            carregarLivros();
+        });
+
+        function carregarPerfil() {
+            document.getElementById('perfilNome').textContent = userData.nome;
+            document.getElementById('perfilMatricula').textContent = '📋 ' + userData.matricula;
+            document.getElementById('perfilSerieTurma').textContent = userData.serie + ' - Turma ' + userData.turma;
+            
+            document.getElementById('totalLidos').textContent = userData.total_lidos || 0;
+            document.getElementById('livrosAtuais').textContent = userData.livros_atuais?.length || 0;
+            
+            const dataCadastro = userData.data_cadastro?.toDate() || new Date();
+            const dias = Math.floor((new Date() - dataCadastro) / (1000 * 60 * 60 * 24));
+            document.getElementById('diasLeitor').textContent = dias || 0;
+            
+            const badgesContainer = document.getElementById('badgesContainer');
+            if (userData.badges && userData.badges.length > 0) {
+                badgesContainer.innerHTML = userData.badges.map(b => 
+                    `<span class="badge-item"><i class="fas fa-star"></i> ${b}</span>`
+                ).join('');
+            } else {
+                badgesContainer.innerHTML = '<p style="color:var(--text-secondary);font-size:var(--font-size-sm);">Nenhuma conquista ainda. Continue lendo!</p>';
+            }
+        }
+
+        async function carregarLivros() {
+            const snapshot = await db.collection('livros').get();
+            allLivros = [];
+            snapshot.forEach(doc => allLivros.push({ id: doc.id, ...doc.data() }));
+            
+            const atuaisContainer = document.getElementById('livrosAtuaisContainer');
+            const livrosAtuais = allLivros.filter(l => userData.livros_atuais?.includes(l.id));
+            
+            if (livrosAtuais.length === 0) {
+                atuaisContainer.innerHTML = '<p style="color:var(--text-secondary);font-size:var(--font-size-sm);">Nenhum livro emprestado</p>';
+            } else {
+                atuaisContainer.innerHTML = livrosAtuais.map(l => `
+                    <div class="livro-mini">
+                        <img src="${l.capaUrl || 'assets/images/default-cover.png'}" alt="${l.titulo}">
+                        <div class="livro-mini-info">
+                            <h4>${l.titulo}</h4>
+                            <p>${l.autor} • ${l.genero}</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            const historicoContainer = document.getElementById('historicoContainer');
+            const historico = allLivros.filter(l => userData.historico?.includes(l.id));
+            
+            if (historico.length === 0) {
+                historicoContainer.innerHTML = '<p style="color:var(--text-secondary);font-size:var(--font-size-sm);">Nenhum livro lido ainda</p>';
+            } else {
+                historicoContainer.innerHTML = historico.map(l => `
+                    <div class="livro-mini">
+                        <img src="${l.capaUrl || 'assets/images/default-cover.png'}" alt="${l.titulo}">
+                        <div class="livro-mini-info">
+                            <h4>${l.titulo}</h4>
+                            <p>${l.autor} • ${l.genero}</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        async function sair() {
+            if (confirm('Deseja realmente sair?')) {
+                await authSystem.logout();
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+</html>

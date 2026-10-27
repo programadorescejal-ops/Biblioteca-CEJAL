@@ -1,0 +1,56 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // ============================================
+    // REGRAS DE SEGURANÇA - STORAGE
+    // ============================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+        exists(/databases/(default)/documents/admins/$(request.auth.uid));
+    }
+    
+    // ============================================
+    // CAPAS DE LIVROS
+    // ============================================
+    match /livros/{livroId}/{fileName} {
+      // Qualquer um pode ler as capas
+      allow read: if true;
+      
+      // Só admin pode fazer upload de capas
+      allow write: if isAdmin();
+      
+      // Validação do arquivo
+      allow create: if isAdmin() && 
+        request.resource.size < 5 * 1024 * 1024 && // 5MB máximo
+        request.resource.contentType.matches('image/.*');
+    }
+    
+    // ============================================
+    // AVATARS DOS ALUNOS
+    // ============================================
+    match /alunos/{alunoId}/avatar/{fileName} {
+      // Aluno pode ler seu próprio avatar; admin pode ler todos
+      allow read: if isAdmin() || 
+        (isAuthenticated() && request.auth.uid == alunoId);
+      
+      // Aluno pode fazer upload do seu próprio avatar
+      allow write: if isAuthenticated() && 
+        request.auth.uid == alunoId &&
+        request.resource.size < 2 * 1024 * 1024 && // 2MB máximo
+        request.resource.contentType.matches('image/.*');
+    }
+    
+    // ============================================
+    // ARQUIVOS TEMPORÁRIOS
+    // ============================================
+    match /tmp/{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

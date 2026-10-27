@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>📚 Biblioteca CEJAL</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    
+    <!-- ========== HEADER ========== -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-book-open"></i>
+                    <span>Biblioteca CEJAL</span>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-search-toggle" id="btnToggleSearch">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="btn-profile" id="btnProfile">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="userName">Carregando...</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========== BUSCA ========== -->
+    <div class="search-section" id="searchSection">
+        <div class="container">
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Buscar por título, autor ou gênero..." class="search-input">
+                <button class="btn-clear-search" id="btnClearSearch"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="filter-tabs" id="filterTabs">
+                <button class="filter-tab active" data-filter="todos"><i class="fas fa-th-list"></i> Todos</button>
+                <button class="filter-tab" data-filter="disponiveis"><i class="fas fa-check-circle"></i> Disponíveis</button>
+                <button class="filter-tab" data-filter="emprestados"><i class="fas fa-clock"></i> Emprestados</button>
+                <button class="filter-tab" data-filter="meus"><i class="fas fa-user"></i> Meus Livros</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== CONTEÚDO ========== -->
+    <main class="main-content">
+        <div class="container">
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalLivros">0</span>
+                    <span class="stat-label">Livros</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="livrosDisponiveis">0</span>
+                    <span class="stat-label">Disponíveis</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="meusLivros">0</span>
+                    <span class="stat-label">Meus Livros</span>
+                </div>
+            </div>
+            <div class="livros-grid" id="listaLivros">
+                <div class="loading-container">
+                    <div class="spinner"></div>
+                    <p>Carregando livros...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ========== BOTÃO FLUTUANTE ========== -->
+    <button class="fab" id="fabAction"><i class="fas fa-plus"></i></button>
+
+    <!-- ========== MENU MOBILE ========== -->
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="#" class="nav-item active" data-page="catalogo"><i class="fas fa-book"></i><span>Catálogo</span></a>
+        <a href="#" class="nav-item" data-page="perfil"><i class="fas fa-user"></i><span>Perfil</span></a>
+        <a href="#" class="nav-item" data-page="historico"><i class="fas fa-history"></i><span>Histórico</span></a>
+        <a href="#" class="nav-item" id="adminNav" style="display:none;"><i class="fas fa-cog"></i><span>Admin</span></a>
+        <a href="#" class="nav-item" id="btnLogout"><i class="fas fa-sign-out-alt"></i><span>Sair</span></a>
+    </nav>
+
+    <!-- ========== MODAL ========== -->
+    <div class="modal" id="modalConfirmacao">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Confirmar ação</h3>
+                <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body"><p id="modalMessage">Deseja confirmar esta ação?</p></div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="fecharModal()">Cancelar</button>
+                <button class="btn-primary" id="modalConfirmBtn">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== TOAST ========== -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ========== SCRIPTS ========== -->
+    <script src="js/config/firebase-config.js"></script>
+    <script src="js/services/google-books.js"></script>
+    <script src="js/auth/auth.js"></script>
+    <script src="js/auth/auth-guard.js"></script>
+    <script src="js/core/livros.js"></script>
+    <script src="js/core/emprestimos.js"></script>
+    <script src="js/utils/helpers.js"></script>
+    <script src="js/utils/validators.js"></script>
+    
+    <script>
+        let currentFilter = 'todos';
+        let searchTerm = '';
+        let userData = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const loggedIn = await authGuard.verifyAuth();
+                if (!loggedIn) {
+                    window.location.replace('login.html');
+                    return;
+                }
+
+                // Admin vai direto pro painel
+                const adminDoc = await db.collection('admins').doc(auth.currentUser.uid).get();
+                if (adminDoc.exists) {
+                    window.location.replace('admin.html');
+                    return;
+                }
+
+                // Precisa ter documento na coleção alunos
+                userData = await authSystem.loadUserData(auth.currentUser.uid);
+                if (!userData || userData.role === 'admin') {
+                    // Admin não usa o catálogo; perfil incompleto volta ao login
+                    if (userData && userData.role === 'admin') {
+                        window.location.replace('admin.html');
+                        return;
+                    }
+                    await auth.signOut();
+                    window.location.replace('login.html');
+                    return;
+                }
+                if (!userData.nome) {
+                    await auth.signOut();
+                    window.location.replace('login.html');
+                    return;
+                }
+
+                updateUserUI(userData);
+                initLivros();
+                setupEventListeners();
+                checkAtrasos();
+            } catch (err) {
+                console.error('Falha ao iniciar catálogo:', err);
+                try { await auth.signOut(); } catch (_) {}
+                window.location.replace('login.html');
+            }
+        });
+
+        function initLivros() {
+            livrosSystem.listarLivrosEmTempoReal(null, (livros) => {
+                renderLivros(livros);
+                updateStats(livros);
+            });
+        }
+
+        function renderLivros(livros) {
+            const container = document.getElementById('listaLivros');
+            let filtered = livros;
+            
+            if (searchTerm) {
+                const term = searchTerm.toLowerCase();
+                filtered = filtered.filter(l => 
+                    (l.titulo || '').toLowerCase().includes(term) ||
+                    (l.autor || '').toLowerCase().includes(term) ||
+                    (l.genero || '').toLowerCase().includes(term)
+                );
+            }
+            
+            switch(currentFilter) {
+                case 'disponiveis': filtered = filtered.filter(l => l.quantidade_disponivel > 0); break;
+                case 'emprestados': filtered = filtered.filter(l => l.quantidade_disponivel < l.quantidade_total); break;
+                case 'meus': filtered = filtered.filter(l => userData?.livros_atuais?.includes(l.id)); break;
+            }
+            
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-book-open"></i>
+                        <h3>Nenhum livro encontrado</h3>
+                        <p>Tente ajustar sua busca ou filtros</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = filtered.map(livro => createLivroCard(livro)).join('');
+        }
+
+        function createLivroCard(livro) {
+            const disponivel = livro.quantidade_disponivel > 0;
+            const temEmprestimo = userData?.livros_atuais?.includes(livro.id);
+            const dataDevolucao = livro.data_devolucao_prevista ? formatarData(livro.data_devolucao_prevista) : '';
+            
+            return `
+                <div class="livro-card" data-id="${livro.id}">
+                    <div class="livro-capa">
+                        <img src="${livro.capaUrl || 'assets/images/default-cover.png'}" alt="${livro.titulo}" loading="lazy" onerror="this.src='assets/images/default-cover.png'">
+                        <span class="livro-status ${disponivel ? 'disponivel' : 'indisponivel'}">${disponivel ? '✅ Disponível' : '🔴 Indisponível'}</span>
+                    </div>
+                    <div class="livro-info">
+                        <h3 class="livro-titulo">${livro.titulo}</h3>
+                        <p class="livro-autor"><i class="fas fa-user-edit"></i> ${livro.autor}</p>
+                        <div class="livro-meta">
+                            <span class="livro-genero"><i class="fas fa-tag"></i> ${livro.genero}</span>
+                            <span class="livro-exemplares"><i class="fas fa-copy"></i> ${livro.quantidade_disponivel}/${livro.quantidade_total}</span>
+                        </div>
+                        ${temEmprestimo ? `<div class="livro-devolucao"><i class="fas fa-clock"></i> Devolver até: <strong>${dataDevolucao}</strong></div>` : ''}
+                        <div class="livro-actions">
+                            ${!temEmprestimo && disponivel ? `<button class="btn-primary btn-pegar" onclick="pegarLivro('${livro.id}')"><i class="fas fa-hand-holding-heart"></i> Pegar</button>` : ''}
+                            ${temEmprestimo ? `<button class="btn-success btn-devolver" onclick="devolverLivro('${livro.id}')"><i class="fas fa-undo"></i> Devolver</button>` : ''}
+                            ${!temEmprestimo && !disponivel ? `<button class="btn-secondary btn-reservar" onclick="reservarLivro('${livro.id}')"><i class="fas fa-clock"></i> Reservar</button>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateStats(livros) {
+            document.getElementById('totalLivros').textContent = livros.length;
+            document.getElementById('livrosDisponiveis').textContent = livros.filter(l => l.quantidade_disponivel > 0).length;
+            document.getElementById('meusLivros').textContent = userData?.livros_atuais?.length || 0;
+        }
+
+        function updateUserUI(user) {
+            document.getElementById('userName').textContent = user?.nome || 'Usuário';
+        }
+
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                searchTerm = e.target.value;
+                renderLivros(livrosSystem.livros);
+            });
+            
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentFilter = tab.dataset.filter;
+                    renderLivros(livrosSystem.livros);
+                });
+            });
+            
+            document.getElementById('btnProfile').addEventListener('click', () => window.location.href = 'perfil.html');
+            document.getElementById('btnLogout').addEventListener('click', async () => {
+                if (confirm('Deseja realmente sair?')) {
+                    await authSystem.logout();
+                    window.location.href = 'login.html';
+                }
+            });
+            
+            document.getElementById('adminNav').addEventListener('click', () => window.location.href = 'admin.html');
+        }
+
+        async function pegarLivro(livroId) {
+            if (!userData) { showToast('Erro: Usuário não logado', 'error'); return; }
+            const confirmacao = await mostrarModal('Confirmar Empréstimo', 'Deseja pegar este livro emprestado? Lembre-se que você tem 7 dias para devolver.');
+            if (!confirmacao) return;
+            
+            const loading = showLoading('Processando...');
+            try {
+                const result = await livrosSystem.pegarEmprestimo(livroId, userData.id);
+                loading.close();
+                if (result.success) {
+                    showToast('📚 Livro emprestado com sucesso! Devolução prevista: ' + formatarData(result.dataDevolucao), 'success');
+                    userData = await authSystem.loadUserData(userData.id);
+                    updateUserUI(userData);
+                } else {
+                    showToast('❌ ' + result.error, 'error');
+                }
+            } catch (error) {
+                loading.close();
+                showToast('❌ Erro ao pegar livro: ' + error.message, 'error');
+            }
+        }
+
+        async function devolverLivro(livroId) {
+            if (!userData) { showToast('Erro: Usuário não logado', 'error'); return; }
+            const confirmacao = await mostrarModal('Confirmar Devolução', 'Tem certeza que deseja devolver este livro?');
+            if (!confirmacao) return;
+            
+            const loading = showLoading('Devolvendo livro...');
+            try {
+                const result = await livrosSystem.devolverLivro(livroId, userData.id);
+                loading.close();
+                if (result.success) {
+                    showToast('✅ Livro devolvido com sucesso!', 'success');
+                    userData = await authSystem.loadUserData(userData.id);
+                    updateUserUI(userData);
+                } else {
+                    showToast('❌ ' + result.error, 'error');
+                }
+            } catch (error) {
+                loading.close();
+                showToast('❌ Erro ao devolver livro: ' + error.message, 'error');
+            }
+        }
+
+        async function reservarLivro(livroId) {
+            showToast('📌 Função de reserva em desenvolvimento', 'info');
+        }
+
+        async function checkAtrasos() {
+            try {
+                const atrasados = await livrosSystem.verificarAtrasos();
+                const meusAtrasos = atrasados.filter(a => a.aluno_id === userData.id);
+                if (meusAtrasos.length > 0) {
+                    showToast(`⚠️ Você tem ${meusAtrasos.length} livro(s) com atraso. Regularize sua situação!`, 'warning', 10000);
+                }
+            } catch (error) {
+                console.error('Erro ao verificar atrasos:', error);
+            }
+        }
+
+        window.pegarLivro = pegarLivro;
+        window.devolverLivro = devolverLivro;
+        window.reservarLivro = reservarLivro;
+        window.fecharModal = fecharModal;
+        window.mostrarModal = mostrarModal;
+        window.showToast = showToast;
+        window.showLoading = showLoading;
+    </script>
+</body>
+</html>

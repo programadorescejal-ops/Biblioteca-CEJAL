@@ -1,0 +1,205 @@
+/* ============================================
+   RESPONSIVE BREAKPOINTS
+   ============================================ */
+
+/* ============================================
+   EXTRA SMALL DEVICES (Mobile < 360px)
+   ============================================ */
+@media (max-width: 359px) {
+    .container {
+        padding: 0 var(--spacing-sm);
+    }
+    
+    .livro-card {
+        border-radius: var(--radius-sm);
+    }
+    
+    .livro-info {
+        padding: var(--spacing-sm);
+    }
+    
+    .livro-titulo {
+        font-size: var(--font-size-sm);
+    }
+    
+    .btn-profile span {
+        display: none;
+    }
+    
+    .logo {
+        font-size: var(--font-size-md);
+    }
+    
+    .logo i {
+        font-size: 22px;
+    }
+}
+
+/* ============================================
+   SMALL DEVICES (Mobile 360px - 479px)
+   ============================================ */
+@media (min-width: 360px) and (max-width: 479px) {
+    .livros-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-sm);
+    }
+    
+    .livro-capa {
+        padding-top: 140%;
+    }
+    
+    .header-actions .btn-profile span {
+        display: none;
+    }
+    
+    .filter-tabs {
+        gap: var(--spacing-xs);
+    }
+    
+    .filter-tab {
+        font-size: var(--font-size-xs);
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+}
+
+/* ============================================
+   MEDIUM DEVICES (Tablet 480px - 767px)
+   ============================================ */
+@media (min-width: 480px) and (max-width: 767px) {
+    .livros-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+    }
+    
+    .header-content {
+        padding: 0 var(--spacing-md);
+    }
+    
+    .search-section {
+        padding: var(--spacing-md) 0;
+    }
+}
+
+/* ============================================
+   LARGE DEVICES (Laptops 768px - 1023px)
+   ============================================ */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .livros-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .search-section {
+        padding: var(--spacing-lg) 0;
+    }
+    
+    .stats-bar {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ============================================
+   EXTRA LARGE DEVICES (Desktops 1024px+)
+   ============================================ */
+@media (min-width: 1024px) {
+    .livros-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .container {
+        padding: 0 var(--spacing-xl);
+    }
+    
+    .search-box {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .stats-bar {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+    .header,
+    .mobile-nav,
+    .search-section,
+    .fab,
+    .toast-container,
+    .modal {
+        display: none !important;
+    }
+    
+    body {
+        padding: 0;
+        background: white;
+    }
+    
+    .livro-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+    
+    .livro-card:hover {
+        transform: none;
+    }
+}
+
+/* ============================================
+   DARK MODE (opcional - preparado para futuro)
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+    /* Futuramente, adicionar suporte a dark mode */
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ============================================
+   LANDSCAPE ORIENTATION (Mobile)
+   ============================================ */
+@media (max-height: 500px) and (orientation: landscape) {
+    .header {
+        height: 48px;
+    }
+    
+    body {
+        padding-top: 48px;
+    }
+    
+    .search-section {
+        margin-top: 48px;
+        top: 48px;
+    }
+    
+    .livro-capa {
+        padding-top: 100%;
+    }
+    
+    .mobile-nav {
+        padding: 2px 0;
+    }
+    
+    .nav-item i {
+        font-size: 18px;
+    }
+    
+    .nav-item span {
+        font-size: 10px;
+    }
+}

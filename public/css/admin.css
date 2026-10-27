@@ -1,0 +1,444 @@
+/* ============================================
+   ADMIN STYLES - BIBLIOTECA CEJAL
+   ============================================ */
+
+/* ============================================
+   ADMIN HEADER
+   ============================================ */
+.admin-header {
+    background: linear-gradient(135deg, #1a237e, #0d47a1);
+    color: white;
+    padding: var(--spacing-md) 0;
+    box-shadow: var(--shadow-md);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.admin-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-header-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.btn-back,
+.btn-logout {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 500;
+    font-family: var(--font-primary);
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.btn-back {
+    background: rgba(255,255,255,0.2);
+    color: white;
+}
+
+.btn-back:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.btn-logout {
+    background: #c62828;
+    color: white;
+}
+
+.btn-logout:hover {
+    background: #b71c1c;
+    transform: translateY(-1px);
+}
+
+/* ============================================
+   DASHBOARD CARDS
+   ============================================ */
+.dashboard-section {
+    padding: var(--spacing-lg) 0;
+}
+
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.dashboard-card {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    transition: all var(--transition-normal);
+}
+
+.dashboard-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.card-number {
+    display: block;
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.card-label {
+    display: block;
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+/* ============================================
+   ADMIN TABS
+   ============================================ */
+.admin-tabs {
+    background: var(--surface);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    position: sticky;
+    top: 64px;
+    z-index: 90;
+}
+
+.tabs-nav {
+    display: flex;
+    gap: var(--spacing-sm);
+    overflow-x: auto;
+    padding: var(--spacing-sm) 0;
+    scrollbar-width: none;
+}
+
+.tabs-nav::-webkit-scrollbar {
+    display: none;
+}
+
+.tab-btn {
+    flex-shrink: 0;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-family: var(--font-primary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border-bottom: 3px solid transparent;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.tab-btn:hover {
+    color: var(--primary);
+}
+
+.tab-btn.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+}
+
+.tab-content {
+    display: none;
+    padding: var(--spacing-lg) 0;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* ============================================
+   ADMIN TOOLBAR
+   ============================================ */
+.admin-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.admin-toolbar h2 {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.toolbar-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+/* ============================================
+   EMPRÉSTIMOS LIST
+   ============================================ */
+.emprestimo-card {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    box-shadow: var(--shadow-sm);
+    border-left: 4px solid var(--primary);
+    transition: all var(--transition-fast);
+}
+
+.emprestimo-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.emprestimo-card.atrasado {
+    border-left-color: var(--error);
+    background: #FFF5F5;
+}
+
+.emprestimo-info {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: var(--spacing-md);
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .emprestimo-info {
+        grid-template-columns: 1fr;
+    }
+}
+
+.emprestimo-livro h4 {
+    font-size: var(--font-size-md);
+    margin-bottom: var(--spacing-xs);
+}
+
+.emprestimo-livro p {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin: 2px 0;
+}
+
+.emprestimo-datas {
+    font-size: var(--font-size-sm);
+}
+
+.emprestimo-datas p {
+    margin: 2px 0;
+}
+
+.emprestimo-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+}
+
+/* ============================================
+   BADGES
+   ============================================ */
+.badge {
+    display: inline-block;
+    padding: 2px var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+}
+
+.badge.atrasado {
+    background: #c62828;
+    color: white;
+}
+
+.badge.em-dia {
+    background: #2e7d32;
+    color: white;
+}
+
+/* ============================================
+   BUTTONS SMALL
+   ============================================ */
+.btn-small {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    font-family: var(--font-primary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.btn-small:hover {
+    transform: translateY(-1px);
+}
+
+.btn-warning {
+    background: #f57f17;
+    color: white;
+}
+
+.btn-warning:hover {
+    background: #e65100;
+}
+
+.btn-danger {
+    background: #c62828;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #b71c1c;
+}
+
+/* ============================================
+   ALUNOS GRID
+   ============================================ */
+.aluno-card {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.aluno-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-full);
+    background: var(--primary-light);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.aluno-info {
+    flex: 1;
+}
+
+.aluno-info h4 {
+    font-size: var(--font-size-md);
+}
+
+.aluno-info p {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin: 2px 0;
+}
+
+.aluno-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+/* ============================================
+   LIVROS ADMIN GRID
+   ============================================ */
+.livro-admin-card {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.livro-admin-capa {
+    width: 60px;
+    height: 84px;
+    flex-shrink: 0;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--background);
+}
+
+.livro-admin-capa img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.livro-admin-info {
+    flex: 1;
+}
+
+.livro-admin-info h4 {
+    font-size: var(--font-size-md);
+}
+
+.livro-admin-info p {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin: 2px 0;
+}
+
+.livro-admin-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+/* ============================================
+   RESPONSIVE ADMIN
+   ============================================ */
+@media (max-width: 480px) {
+    .dashboard-cards {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-sm);
+    }
+    
+    .dashboard-card {
+        padding: var(--spacing-sm);
+    }
+    
+    .card-number {
+        font-size: var(--font-size-lg);
+    }
+    
+    .admin-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .toolbar-actions {
+        flex-direction: column;
+    }
+    
+    .aluno-card,
+    .livro-admin-card {
+        flex-direction: column;
+        text-align: center;
+    }
+}

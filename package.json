@@ -1,0 +1,27 @@
+{
+  "name": "biblioteca-cejal",
+  "version": "1.0.0",
+  "description": "Sistema de Biblioteca Escolar - CEJAL",
+  "main": "index.html",
+  "scripts": {
+    "start": "firebase serve",
+    "deploy": "firebase deploy",
+    "build": "echo 'Build completo'",
+    "test": "echo 'Testes'"
+  },
+  "keywords": [
+    "biblioteca",
+    "firebase",
+    "escola",
+    "emprestimo",
+    "cejal"
+  ],
+  "author": "Biblioteca CEJAL",
+  "license": "MIT",
+  "dependencies": {
+    "firebase": "^9.22.0"
+  },
+  "devDependencies": {
+    "firebase-tools": "^12.0.0"
+  }
+}

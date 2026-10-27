@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Biblioteca CEJAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1565C0, #0D47A1);
+            padding: var(--spacing-md);
+        }
+        .login-container {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            max-width: 420px;
+            width: 100%;
+            box-shadow: var(--shadow-xl);
+        }
+        .login-logo {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+        .login-logo i {
+            font-size: 48px;
+            color: var(--primary);
+            background: var(--background);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-full);
+        }
+        .login-logo h1 {
+            font-size: var(--font-size-xl);
+            margin-top: var(--spacing-sm);
+            color: var(--primary);
+        }
+        .login-logo p {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+        }
+        .form-group {
+            margin-bottom: var(--spacing-md);
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: var(--spacing-xs);
+            font-weight: 500;
+            font-size: var(--font-size-sm);
+        }
+        .form-group input {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 2px solid #e0e0e0;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-md);
+            font-family: var(--font-primary);
+            transition: all var(--transition-fast);
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(21,101,192,0.1);
+        }
+        .btn-login {
+            width: 100%;
+            padding: var(--spacing-md);
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-md);
+            font-weight: 600;
+            font-family: var(--font-primary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .btn-login:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .login-links {
+            text-align: center;
+            margin-top: var(--spacing-md);
+        }
+        .login-links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: var(--font-size-sm);
+        }
+        .login-links a:hover {
+            text-decoration: underline;
+        }
+        .divider {
+            text-align: center;
+            margin: var(--spacing-md) 0;
+            color: var(--text-light);
+            font-size: var(--font-size-sm);
+        }
+        .demo-info {
+            background: #E3F2FD;
+            padding: var(--spacing-md);
+            border-radius: var(--radius-sm);
+            margin-top: var(--spacing-md);
+            font-size: var(--font-size-sm);
+        }
+        .demo-info p {
+            margin: 2px 0;
+            color: var(--text-secondary);
+        }
+        .demo-info strong {
+            color: var(--primary);
+        }
+        .password-hint {
+            font-size: var(--font-size-xs);
+            color: var(--text-light);
+            margin-top: var(--spacing-xs);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-page">
+        <div class="login-container">
+            <div class="login-logo">
+                <i class="fas fa-book-open"></i>
+                <h1>📚 Biblioteca CEJAL</h1>
+                <p>Faça login para acessar o acervo</p>
+            </div>
+            
+            <form id="loginForm" onsubmit="fazerLogin(event)">
+                <div class="form-group">
+                    <label><i class="fas fa-id-card"></i> Matrícula</label>
+                    <input type="text" id="matricula" placeholder="Digite sua matrícula" required>
+                    <small class="password-hint">Ex: 2026001</small>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Senha</label>
+                    <input type="password" id="senha" placeholder="Digite sua senha" required>
+                    <small class="password-hint">Senha padrão: escola2026</small>
+                </div>
+                
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Entrar
+                </button>
+            </form>
+            
+            <div class="login-links">
+                <a href="cadastro.html">Primeiro acesso? Cadastre-se</a>
+                <span style="margin:0 var(--spacing-sm);color:var(--text-light);">|</span>
+                <a href="#" onclick="recuperarSenha()">Esqueci a senha</a>
+            </div>
+            
+            <div class="divider">— Dados para teste —</div>
+            
+            <div class="demo-info">
+                <p><strong>👤 Aluno:</strong> Matrícula <strong>2026001</strong> | Senha: <strong>escola2026</strong></p>
+                <p><strong>👨‍💼 Admin:</strong> Matrícula <strong>admin</strong> | Senha: <strong>admin2026</strong></p>
+                <p style="margin-top:var(--spacing-xs);font-size:var(--font-size-xs);">
+                    <i class="fas fa-info-circle"></i> Use admin para acessar o painel administrativo
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="js/config/firebase-config.js"></script>
+    <script src="js/auth/auth.js"></script>
+    <script src="js/utils/helpers.js"></script>
+    
+    <script>
+        async function fazerLogin(event) {
+            event.preventDefault();
+            
+            const matricula = document.getElementById('matricula').value.trim();
+            const senha = document.getElementById('senha').value;
+            const btn = event.target.querySelector('button[type="submit"]') || document.querySelector('#formLogin button, button[type="submit"]');
+            
+            if (!matricula || !senha) {
+                showToast('Preencha todos os campos', 'error');
+                return;
+            }
+
+            if (btn) { btn.disabled = true; }
+            const loading = typeof showLoading === 'function' ? showLoading('Entrando...') : null;
+            
+            try {
+                // Login unificado (admin ou aluno)
+                const email = matricula.toLowerCase() === 'admin'
+                    ? 'admin@escola.com'
+                    : `${matricula}@escola.com`;
+
+                const cred = await auth.signInWithEmailAndPassword(email, senha);
+                const uid = cred.user.uid;
+
+                // Admin?
+                const adminDoc = await db.collection('admins').doc(uid).get();
+                if (adminDoc.exists || matricula.toLowerCase() === 'admin') {
+                    if (loading) loading.close();
+                    showToast('✅ Bem-vindo, administrador!', 'success');
+                    window.location.replace('admin.html');
+                    return;
+                }
+
+                // Aluno precisa ter perfil
+                const alunoDoc = await db.collection('alunos').doc(uid).get();
+                if (!alunoDoc.exists) {
+                    await auth.signOut();
+                    if (loading) loading.close();
+                    showToast('❌ Perfil de aluno não encontrado. Faça o cadastro.', 'error');
+                    return;
+                }
+
+                if (loading) loading.close();
+                showToast('✅ Bem-vindo(a)!', 'success');
+                window.location.replace('index.html');
+            } catch (error) {
+                if (loading) loading.close();
+                console.error(error);
+                showToast('❌ Matrícula ou senha inválidos', 'error');
+            } finally {
+                if (btn) { btn.disabled = false; }
+            }
+        }
+        
+        function recuperarSenha() {
+            const matricula = prompt('Digite sua matrícula para recuperar a senha:');
+            if (matricula) {
+                showToast('📧 Email de recuperação enviado para ' + matricula + '@escola.com', 'info');
+            }
+        }
+
+        // Sessão já aberta: manda uma vez só (sem loop)
+        let redirecting = false;
+        auth.onAuthStateChanged(async (user) => {
+            if (!user || redirecting) return;
+            // Só auto-redireciona se a página abriu já logada (não no meio do submit)
+            if (document.activeElement && document.activeElement.closest('form')) return;
+            try {
+                const adminDoc = await db.collection('admins').doc(user.uid).get();
+                if (adminDoc.exists) {
+                    redirecting = true;
+                    window.location.replace('admin.html');
+                    return;
+                }
+                const alunoDoc = await db.collection('alunos').doc(user.uid).get();
+                if (alunoDoc.exists) {
+                    redirecting = true;
+                    window.location.replace('index.html');
+                }
+            } catch (e) {
+                console.warn(e);
+            }
+        });
+</script>
+
+</body>
+</html>

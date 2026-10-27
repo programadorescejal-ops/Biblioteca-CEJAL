@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 Painel Admin - Biblioteca CEJAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/admin.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    
+    <header class="admin-header">
+        <div class="container">
+            <div class="admin-header-content">
+                <div class="logo"><i class="fas fa-shield-alt"></i><span>Painel Admin - CEJAL</span></div>
+                <div class="admin-header-actions">
+                    <button class="btn-back" onclick="window.location.href='index.html'"><i class="fas fa-arrow-left"></i> Voltar</button>
+                    <button class="btn-logout" id="btnLogoutAdmin"><i class="fas fa-sign-out-alt"></i> Sair</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="dashboard-section">
+        <div class="container">
+            <div class="dashboard-cards">
+                <div class="dashboard-card">
+                    <div class="card-icon" style="background:#1565C0"><i class="fas fa-book"></i></div>
+                    <div class="card-info">
+                        <span class="card-number" id="totalLivros">0</span>
+                        <span class="card-label">Total de Livros</span>
+                    </div>
+                </div>
+                <div class="dashboard-card">
+                    <div class="card-icon" style="background:#2E7D32"><i class="fas fa-hand-holding-heart"></i></div>
+                    <div class="card-info">
+                        <span class="card-number" id="emprestimosAtivos">0</span>
+                        <span class="card-label">Empréstimos Ativos</span>
+                    </div>
+                </div>
+                <div class="dashboard-card">
+                    <div class="card-icon" style="background:#F57F17"><i class="fas fa-clock"></i></div>
+                    <div class="card-info">
+                        <span class="card-number" id="emprestimosAtrasados">0</span>
+                        <span class="card-label">Atrasados</span>
+                    </div>
+                </div>
+                <div class="dashboard-card">
+                    <div class="card-icon" style="background:#C62828"><i class="fas fa-user-slash"></i></div>
+                    <div class="card-info">
+                        <span class="card-number" id="alunosBloqueados">0</span>
+                        <span class="card-label">Alunos Bloqueados</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="admin-tabs">
+        <div class="container">
+            <div class="tabs-nav">
+                <button class="tab-btn active" data-tab="emprestimos"><i class="fas fa-list"></i> Empréstimos</button>
+                <button class="tab-btn" data-tab="alunos"><i class="fas fa-users"></i> Alunos</button>
+                <button class="tab-btn" data-tab="livros"><i class="fas fa-book"></i> Livros</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content active" id="tab-emprestimos">
+        <div class="container">
+            <div class="admin-toolbar">
+                <h2><i class="fas fa-hand-holding-heart"></i> Gerenciar Empréstimos</h2>
+                <div class="toolbar-actions">
+                    <input type="text" id="searchEmprestimos" placeholder="Buscar por aluno ou livro..." class="search-input" style="width:250px;">
+                </div>
+            </div>
+            <div class="emprestimos-list" id="listaEmprestimos">
+                <div class="loading-container"><div class="spinner"></div><p>Carregando empréstimos...</p></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="tab-alunos">
+        <div class="container">
+            <div class="admin-toolbar">
+                <h2><i class="fas fa-users"></i> Gerenciar Alunos</h2>
+                <button class="btn-primary" onclick="adicionarAluno()"><i class="fas fa-user-plus"></i> Novo Aluno</button>
+            </div>
+            <div class="alunos-grid" id="listaAlunos">
+                <div class="loading-container"><div class="spinner"></div><p>Carregando alunos...</p></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="tab-livros">
+        <div class="container">
+            <div class="admin-toolbar">
+                <h2><i class="fas fa-book"></i> Gerenciar Livros</h2>
+                <button class="btn-primary" onclick="adicionarLivro()"><i class="fas fa-plus"></i> Novo Livro</button>
+            </div>
+            <div class="livros-admin-grid" id="listaLivrosAdmin">
+                <div class="loading-container"><div class="spinner"></div><p>Carregando livros...</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modais -->
+    <div class="modal" id="modalAdicionarLivro">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3><i class="fas fa-book"></i> Adicionar Livro</h3>
+                <button class="modal-close" onclick="fecharModal('modalAdicionarLivro')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="formAdicionarLivro" onsubmit="salvarLivro(event)">
+                    <div class="form-group"><label>Título *</label><input type="text" id="livroTitulo" required placeholder="Título do livro"></div>
+                    <div class="form-group"><label>Autor *</label><input type="text" id="livroAutor" required placeholder="Nome do autor"></div>
+                    <div class="form-group">
+                        <label>Gênero *</label>
+                        <select id="livroGenero" required>
+                            <option value="">Selecione...</option>
+                            <option value="Fantasia">Fantasia</option>
+                            <option value="Ficção Científica">Ficção Científica</option>
+                            <option value="Romance">Romance</option>
+                            <option value="Drama">Drama</option>
+                            <option value="Mistério">Mistério</option>
+                            <option value="Literatura Brasileira">Literatura Brasileira</option>
+                            <option value="Infantil">Infantil</option>
+                            <option value="Autoajuda">Autoajuda</option>
+                            <option value="Biografia">Biografia</option>
+                            <option value="Filosofia">Filosofia</option>
+                            <option value="Realismo Mágico">Realismo Mágico</option>
+                            <option value="Graphic Novel">Graphic Novel</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Quantidade *</label><input type="number" id="livroQuantidade" required min="1" value="1"></div>
+                    <button type="submit" class="btn-primary btn-block"><i class="fas fa-save"></i> Salvar Livro</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modalAdicionarAluno">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-plus"></i> Adicionar Aluno</h3>
+                <button class="modal-close" onclick="fecharModal('modalAdicionarAluno')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="formAdicionarAluno" onsubmit="salvarAluno(event)">
+                    <div class="form-group"><label>Nome *</label><input type="text" id="alunoNome" required placeholder="Nome completo"></div>
+                    <div class="form-group"><label>Matrícula *</label><input type="text" id="alunoMatricula" required placeholder="Ex: 2026001"></div>
+                    <div class="form-group">
+                        <label>Série *</label>
+                        <select id="alunoSerie" required>
+                            <option value="">Selecione...</option>
+                            <option value="6º Ano">6º Ano</option>
+                            <option value="7º Ano">7º Ano</option>
+                            <option value="8º Ano">8º Ano</option>
+                            <option value="9º Ano">9º Ano</option>
+                            <option value="1º Ano EM">1º Ano EM</option>
+                            <option value="2º Ano EM">2º Ano EM</option>
+                            <option value="3º Ano EM">3º Ano EM</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Turma *</label>
+                        <select id="alunoTurma" required>
+                            <option value="">Selecione...</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary btn-block"><i class="fas fa-save"></i> Cadastrar Aluno</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="js/config/firebase-config.js"></script>
+    <script src="js/auth/auth.js"></script>
+    <script src="js/auth/auth-guard.js"></script>
+    <script src="js/core/livros.js"></script>
+    <script src="js/core/emprestimos.js"></script>
+    <script src="js/services/google-books.js"></script>
+    <script src="js/utils/helpers.js"></script>
+    
+    <script>
+        // ============================================
+        // INICIALIZAÇÃO
+        // ============================================
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Exige login E papel de admin (coleção admins)
+            const isAdmin = await authGuard.requireAdmin();
+            if (!isAdmin) return;
+            
+            carregarDashboard();
+            carregarEmprestimos();
+            setupEventListeners();
+        });
+
+        // ============================================
+        // FUNÇÕES AUXILIARES
+        // ============================================
+        function formatarData(timestamp) {
+            if (!timestamp) return 'N/A';
+            try {
+                const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+                return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            } catch { return 'Data inválida'; }
+        }
+
+        function isAtrasado(data) {
+            if (!data) return false;
+            const hoje = new Date();
+            const devolucao = data.toDate ? data.toDate() : new Date(data);
+            return devolucao < hoje;
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <div class="toast-icon"><i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'}"></i></div>
+                <div class="toast-message">${message}</div>
+                <button class="toast-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        function fecharModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // ============================================
+        // DASHBOARD
+        // ============================================
+        async function carregarDashboard() {
+            try {
+                const livros = await db.collection('livros').get();
+                document.getElementById('totalLivros').textContent = livros.size;
+                
+                const emprestimos = await db.collection('emprestimos').where('status','==','ativo').get();
+                document.getElementById('emprestimosAtivos').textContent = emprestimos.size;
+                
+                const atrasados = await livrosSystem.verificarAtrasos();
+                document.getElementById('emprestimosAtrasados').textContent = atrasados.length;
+                
+                const bloqueados = await db.collection('alunos').where('bloqueado','==',true).get();
+                document.getElementById('alunosBloqueados').textContent = bloqueados.size;
+            } catch (error) {
+                console.error('Erro no dashboard:', error);
+            }
+        }
+
+        // ============================================
+        // EMPRÉSTIMOS
+        // ============================================
+        async function carregarEmprestimos() {
+            const container = document.getElementById('listaEmprestimos');
+            try {
+                const snapshot = await db.collection('emprestimos')
+                    .where('status','==','ativo')
+                    .orderBy('data_emprestimo','desc')
+                    .get();
+                
+                if (snapshot.empty) {
+                    container.innerHTML = `<div class="empty-state"><i class="fas fa-hand-holding-heart"></i><h3>Nenhum empréstimo ativo</h3></div>`;
+                    return;
+                }
+                
+                let html = '';
+                for (const doc of snapshot.docs) {
+                    const emp = { id: doc.id, ...doc.data() };
+                    const alunoDoc = await db.collection('alunos').doc(emp.aluno_id).get();
+                    const aluno = alunoDoc.exists ? alunoDoc.data() : null;
+                    
+                    const atrasado = isAtrasado(emp.data_devolucao_prevista);
+                    html += `
+                        <div class="emprestimo-card ${atrasado ? 'atrasado' : ''}">
+                            <div class="emprestimo-info">
+                                <div class="emprestimo-livro">
+                                    <h4>📖 ${emp.titulo_livro}</h4>
+                                    <p><strong>Aluno:</strong> ${aluno?.nome || 'Removido'}</p>
+                                    <p><strong>Matrícula:</strong> ${aluno?.matricula || 'N/A'}</p>
+                                    <p><strong>Série/Turma:</strong> ${aluno?.serie || ''} ${aluno?.turma || ''}</p>
+                                </div>
+                                <div class="emprestimo-datas">
+                                    <p><i class="fas fa-calendar-plus"></i> ${formatarData(emp.data_emprestimo)}</p>
+                                    <p><i class="fas fa-calendar-check"></i> ${formatarData(emp.data_devolucao_prevista)}</p>
+                                    ${atrasado ? `<span class="badge atrasado"><i class="fas fa-exclamation-circle"></i> ATRASADO!</span>` : 
+                                    `<span class="badge em-dia"><i class="fas fa-check-circle"></i> Em dia</span>`}
+                                </div>
+                                <div class="emprestimo-actions">
+                                    <button class="btn-small btn-success" onclick="devolverEmprestimo('${emp.id}')"><i class="fas fa-undo"></i> Devolver</button>
+                                    <button class="btn-small btn-warning" onclick="renovarEmprestimo('${emp.id}')"><i class="fas fa-sync"></i> Renovar</button>
+                                    <button class="btn-small btn-danger" onclick="bloquearAluno('${emp.aluno_id}')"><i class="fas fa-ban"></i> Bloquear</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                container.innerHTML = html;
+            } catch (error) {
+                console.error('Erro:', error);
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Erro ao carregar</h3></div>`;
+            }
+        }
+
+        // ============================================
+        // ALUNOS
+        // ============================================
+        async function carregarAlunos() {
+            const container = document.getElementById('listaAlunos');
+            try {
+                const snapshot = await db.collection('alunos').orderBy('nome').get();
+                if (snapshot.empty) {
+                    container.innerHTML = `<div class="empty-state"><i class="fas fa-users"></i><h3>Nenhum aluno cadastrado</h3></div>`;
+                    return;
+                }
+                
+                let html = '';
+                snapshot.forEach(doc => {
+                    const aluno = { id: doc.id, ...doc.data() };
+                    html += `
+                        <div class="aluno-card">
+                            <div class="aluno-avatar"><i class="fas fa-user-graduate"></i></div>
+                            <div class="aluno-info">
+                                <h4>${aluno.nome}</h4>
+                                <p>📋 ${aluno.matricula} • ${aluno.serie} - ${aluno.turma}</p>
+                                <p>📚 ${aluno.livros_atuais?.length || 0} livros emprestados</p>
+                                ${aluno.bloqueado ? `<span class="badge atrasado">🔒 Bloqueado: ${aluno.motivo_bloqueio || 'Sem motivo'}</span>` : ''}
+                            </div>
+                            <div class="aluno-actions">
+                                ${!aluno.bloqueado ? `<button class="btn-small btn-danger" onclick="bloquearAluno('${aluno.id}')"><i class="fas fa-ban"></i> Bloquear</button>` :
+                                `<button class="btn-small btn-success" onclick="desbloquearAluno('${aluno.id}')"><i class="fas fa-unlock"></i> Desbloquear</button>`}
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            } catch (error) {
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Erro ao carregar</h3></div>`;
+            }
+        }
+
+        // ============================================
+        // LIVROS (ADMIN)
+        // ============================================
+        async function carregarLivrosAdmin() {
+            const container = document.getElementById('listaLivrosAdmin');
+            try {
+                const snapshot = await db.collection('livros').orderBy('titulo').get();
+                if (snapshot.empty) {
+                    container.innerHTML = `<div class="empty-state"><i class="fas fa-book"></i><h3>Nenhum livro cadastrado</h3></div>`;
+                    return;
+                }
+                
+                let html = '';
+                snapshot.forEach(doc => {
+                    const livro = { id: doc.id, ...doc.data() };
+                    html += `
+                        <div class="livro-admin-card">
+                            <div class="livro-admin-capa">
+                                <img src="${livro.capaUrl || 'assets/images/default-cover.png'}" alt="${livro.titulo}">
+                            </div>
+                            <div class="livro-admin-info">
+                                <h4>${livro.titulo}</h4>
+                                <p>${livro.autor}</p>
+                                <p><span class="livro-genero">${livro.genero}</span></p>
+                                <p>📚 ${livro.quantidade_disponivel}/${livro.quantidade_total} disponíveis</p>
+                                <p>📊 ${livro.total_emprestimos || 0} empréstimos</p>
+                            </div>
+                            <div class="livro-admin-actions">
+                                <button class="btn-small btn-danger" onclick="removerLivro('${livro.id}')"><i class="fas fa-trash"></i> Remover</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            } catch (error) {
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Erro ao carregar</h3></div>`;
+            }
+        }
+
+        // ============================================
+        // AÇÕES ADMIN
+        // ============================================
+        async function devolverEmprestimo(emprestimoId) {
+            if (!confirm('Confirmar devolução deste livro?')) return;
+            try {
+                const empDoc = await db.collection('emprestimos').doc(emprestimoId).get();
+                const emp = empDoc.data();
+                const result = await livrosSystem.devolverLivro(emp.livro_id, emp.aluno_id);
+                if (result.success) {
+                    showToast('✅ Livro devolvido com sucesso!', 'success');
+                    carregarEmprestimos();
+                    carregarDashboard();
+                } else {
+                    showToast('❌ ' + result.error, 'error');
+                }
+            } catch (error) {
+                showToast('❌ Erro ao devolver', 'error');
+            }
+        }
+
+        async function renovarEmprestimo(emprestimoId) {
+            if (!confirm('Renovar empréstimo por mais 7 dias?')) return;
+            try {
+                const ref = db.collection('emprestimos').doc(emprestimoId);
+                const doc = await ref.get();
+                const data = doc.data();
+                const novaData = new Date(data.data_devolucao_prevista.toDate());
+                novaData.setDate(novaData.getDate() + 7);
+                await ref.update({ data_devolucao_prevista: novaData, renovado: true });
+                showToast('✅ Renovado com sucesso!', 'success');
+                carregarEmprestimos();
+            } catch (error) {
+                showToast('❌ Erro ao renovar', 'error');
+            }
+        }
+
+        async function bloquearAluno(alunoId) {
+            const motivo = prompt('Motivo do bloqueio:');
+            if (!motivo) return;
+            try {
+                await db.collection('alunos').doc(alunoId).update({
+                    bloqueado: true,
+                    motivo_bloqueio: motivo
+                });
+                showToast('🔒 Aluno bloqueado!', 'warning');
+                carregarEmprestimos();
+                carregarAlunos();
+                carregarDashboard();
+            } catch (error) {
+                showToast('❌ Erro ao bloquear', 'error');
+            }
+        }
+
+        async function desbloquearAluno(alunoId) {
+            if (!confirm('Desbloquear este aluno?')) return;
+            try {
+                await db.collection('alunos').doc(alunoId).update({
+                    bloqueado: false,
+                    motivo_bloqueio: null
+                });
+                showToast('✅ Aluno desbloqueado!', 'success');
+                carregarAlunos();
+                carregarDashboard();
+            } catch (error) {
+                showToast('❌ Erro ao desbloquear', 'error');
+            }
+        }
+
+        async function removerLivro(livroId) {
+            if (!confirm('Remover este livro? (Só pode ser removido se não estiver emprestado)')) return;
+            try {
+                const result = await livrosSystem.removerLivro(livroId);
+                if (result.success) {
+                    showToast('✅ Livro removido!', 'success');
+                    carregarLivrosAdmin();
+                    carregarDashboard();
+                } else {
+                    showToast('❌ ' + result.error, 'error');
+                }
+            } catch (error) {
+                showToast('❌ Erro ao remover', 'error');
+            }
+        }
+
+        function adicionarLivro() {
+            document.getElementById('modalAdicionarLivro').classList.add('active');
+        }
+
+        // ============================================
+        // SALVAR LIVRO (CORRIGIDO!)
+        // ============================================
+        async function salvarLivro(event) {
+            event.preventDefault();
+            
+            const dados = {
+                titulo: document.getElementById('livroTitulo').value.trim(),
+                autor: document.getElementById('livroAutor').value.trim(),
+                genero: document.getElementById('livroGenero').value,
+                quantidade: parseInt(document.getElementById('livroQuantidade').value) || 1
+            };
+            
+            if (!dados.titulo || !dados.autor || !dados.genero) {
+                showToast('❌ Preencha todos os campos!', 'error');
+                return;
+            }
+            
+            const btn = event.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+            
+            try {
+                // Adiciona DIRETAMENTE no Firestore (sem depender do livrosSystem)
+                let capaUrl = 'assets/images/default-cover.png';
+                try {
+                    if (typeof googleBooksService !== 'undefined') {
+                        const capa = await googleBooksService.buscarCapa(dados.titulo, dados.autor);
+                        if (capa) capaUrl = capa;
+                    }
+                } catch (_) {}
+
+                const livroData = {
+                    titulo: dados.titulo,
+                    autor: dados.autor,
+                    genero: dados.genero,
+                    capaUrl: capaUrl,
+                    disponivel: true,
+                    quantidade_total: dados.quantidade,
+                    quantidade_disponivel: dados.quantidade,
+                    emprestado_para: [],
+                    titulo_busca: dados.titulo.toLowerCase(),
+                    total_emprestimos: 0,
+                    data_cadastro: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                await db.collection('livros').add(livroData);
+                
+                showToast('✅ Livro adicionado com sucesso!', 'success');
+                fecharModal('modalAdicionarLivro');
+                document.getElementById('formAdicionarLivro').reset();
+                carregarLivrosAdmin();
+                carregarDashboard();
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                showToast('❌ Erro: ' + error.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-save"></i> Salvar Livro';
+            }
+        }
+
+        function adicionarAluno() {
+            document.getElementById('modalAdicionarAluno').classList.add('active');
+        }
+
+        // ============================================
+        // SALVAR ALUNO (CORRIGIDO!)
+        // ============================================
+        async function salvarAluno(event) {
+            event.preventDefault();
+            
+            const dados = {
+                nome: document.getElementById('alunoNome').value.trim(),
+                matricula: document.getElementById('alunoMatricula').value.trim(),
+                serie: document.getElementById('alunoSerie').value,
+                turma: document.getElementById('alunoTurma').value,
+                senha: 'escola2026',
+                confirmarSenha: 'escola2026'
+            };
+            
+            if (!dados.nome || !dados.matricula || !dados.serie || !dados.turma) {
+                showToast('❌ Preencha todos os campos!', 'error');
+                return;
+            }
+            
+            const btn = event.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cadastrando...';
+            
+            try {
+                const result = await authSystem.cadastrarAluno(dados);
+                if (result.success) {
+                    showToast('✅ Aluno cadastrado! Senha padrão: escola2026', 'success');
+                    fecharModal('modalAdicionarAluno');
+                    document.getElementById('formAdicionarAluno').reset();
+                    carregarAlunos();
+                    carregarDashboard();
+                } else {
+                    showToast('❌ ' + result.error, 'error');
+                }
+            } catch (error) {
+                showToast('❌ Erro: ' + error.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-save"></i> Cadastrar Aluno';
+            }
+        }
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        function setupEventListeners() {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+                    if (btn.dataset.tab === 'alunos') carregarAlunos();
+                    if (btn.dataset.tab === 'livros') carregarLivrosAdmin();
+                });
+            });
+            
+            document.getElementById('btnLogoutAdmin').addEventListener('click', async () => {
+                if (confirm('Deseja sair?')) {
+                    await authSystem.logout();
+                    window.location.href = 'login.html';
+                }
+            });
+            
+            const searchInput = document.getElementById('searchEmprestimos');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const term = e.target.value.toLowerCase();
+                    document.querySelectorAll('.emprestimo-card').forEach(card => {
+                        card.style.display = card.textContent.toLowerCase().includes(term) ? 'block' : 'none';
+                    });
+                });
+            }
+        }
+
+        // ============================================
+        // EXPORTAR FUNÇÕES GLOBAIS
+        // ============================================
+        window.devolverEmprestimo = devolverEmprestimo;
+        window.renovarEmprestimo = renovarEmprestimo;
+        window.bloquearAluno = bloquearAluno;
+        window.desbloquearAluno = desbloquearAluno;
+        window.removerLivro = removerLivro;
+        window.adicionarLivro = adicionarLivro;
+        window.salvarLivro = salvarLivro;
+        window.adicionarAluno = adicionarAluno;
+        window.salvarAluno = salvarAluno;
+        window.fecharModal = fecharModal;
+    </script>
+</body>
+</html>
